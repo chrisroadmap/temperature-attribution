@@ -1,0 +1,11 @@
+name: temperature-attribution-2022
+channels:
+  - chrisroadmap
+  - conda-forge
+dependencies:
+  - fair==2.1.3
+  - jupyter
+  - matplotlib
+  - nbstripout
+  - numpy
+  - pandas
