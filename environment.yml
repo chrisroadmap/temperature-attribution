@@ -1,9 +1,8 @@
-name: temperature-attribution-2022
+name: temperature-attribution
 channels:
-  - chrisroadmap
   - conda-forge
 dependencies:
-  - fair==2.1.3
+  - fair==2.2.0
   - h5py
   - jupyter
   - matplotlib
