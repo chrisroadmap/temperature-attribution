@@ -1,7 +1,7 @@
 # temperature-attribution
 Attribution of contributions to global mean surface temperature change through to 2023.
 
-Uses `fair-calibrate` v1.4.1, where emissions and forcing are historical best estimates. I use a one-year extrapolation of emissions to 2023 following the draft ScenarioMIP "M" pathway (the choice really should not matter).
+Uses `fair-calibrate` v1.4.5, where emissions and forcing are historical best estimates. I use a one-year extrapolation of emissions to 2023 following the draft ScenarioMIP "M" pathway (the choice really should not matter).
 
 # requirements
 - `python`
