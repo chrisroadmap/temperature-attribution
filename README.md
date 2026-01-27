@@ -1,7 +1,7 @@
 # temperature-attribution
-Attribution of contributions to global mean surface temperature change through to 2023.
+Attribution of contributions to global mean surface temperature change through to 2025.
 
-Uses `fair-calibrate` v1.4.5, where emissions and forcing are historical best estimates. I use a one-year extrapolation of emissions to 2023 following the draft ScenarioMIP "M" pathway (the choice really should not matter).
+Uses `fair-calibrate` v1.4.5, where emissions and forcing are historical best estimates. I use a three-year extrapolation of emissions to 2025 following a linear extrapolation of recent emissions trends.
 
 # requirements
 - `python`
@@ -14,6 +14,6 @@ Obtain a minimal distribution of `conda` from https://docs.conda.io/projects/min
 2. create the environment using `conda env create -f environment.yml`
 3. activate the environment with `conda activate temperature-attribution`
 4. run `nbstripout --install` to ensure clean notebook commits
-5. fire up `jupyter notebook` and run the notebook in the `notebooks` directory.
+5. fire up `jupyter notebook` and run the notebook in the `notebooks` directory. The notebook for making the extensions is present, but the extensions are already shipped.
 
 Plots and outputs are in... not surprisingly, the `plots` and `output` directories respectively.
