@@ -2,11 +2,11 @@ name: temperature-attribution
 channels:
   - conda-forge
 dependencies:
-  - fair==2.2.0
+  - fair==2.2.4
   - h5py
   - jupyter
+  - jupytext
   - matplotlib
-  - nbstripout
   - netcdf4
   - numpy
   - pandas
