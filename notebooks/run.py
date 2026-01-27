@@ -1,6 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: py:percent,ipynb
 #     text_representation:
 #       extension: .py
 #       format_name: percent
@@ -27,7 +28,6 @@
 # 2. re-run forcing-driven scenarios with the above.
 
 # %%
-import logging
 import os
 
 from fair import FAIR
@@ -40,10 +40,6 @@ import scipy.stats
 import xarray as xr
 
 # %%
-logger = logging.getLogger('fair')
-logger.setLevel(level=logging.CRITICAL)
-
-# %%
 pl.style.use('../defaults.mplstyle')
 
 # %%
@@ -54,7 +50,7 @@ scenarios = ["all"]
 
 # %%
 f = FAIR()
-f.define_time(1750, 2024, 1)
+f.define_time(1750, 2026, 1)
 f.define_scenarios(scenarios)
 species, properties = read_properties('../data/calibration/v1.4.5/species_configs_properties_1.4.5.csv')
 f.define_species(species, properties)
@@ -69,11 +65,11 @@ f.allocate()
 # %% [markdown]
 # ### Get emissions and forcing into fair
 #
-# We use the 2022 harmonization of historical emissions from Smith et al. (2024), plus a one-year extension to 2023 under the proposed ScenarioMIP "medium" pathway.
+# We use the 2022 harmonization of historical emissions from Smith et al. (2024), plus a three-year extension to 2025.
 
 # %%
 f.fill_from_csv(
-    emissions_file='../data/emissions/historical_1750-2023.csv',
+    emissions_file='../output/emissions_extrapolated_1750-2025.csv',
     forcing_file='../data/forcing/volcanic_solar.csv',
 )
 
@@ -293,7 +289,7 @@ scenarios = ["all", "no_ghgs", "no_aerosols", "no_other", "no_natural", "no_anth
 
 # %%
 ff = FAIR()
-ff.define_time(1750, 2024, 1)
+ff.define_time(1750, 2026, 1)
 ff.define_scenarios(scenarios)
 ff.define_configs(df_configs.index)
 
@@ -417,7 +413,7 @@ temp_anthro = (
 temp_all = ff.temperature.sel(scenario="all", layer=0) - ff.temperature.sel(scenario="all", layer=0, timebounds=base).mean(dim='timebounds')
 
 # %%
-df_obs = pd.read_csv('../data/observations/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.rebased_1850-1900.csv', index_col=0)
+df_obs = pd.read_csv('../data/observations/HadCRUT.5.1.0.0.analysis.summary_series.global.annual.1850-2025_rebased_1850-1900.csv', index_col=0)
 df_obs
 
 # %% [markdown]
@@ -428,26 +424,26 @@ df_obs
 # Note the ranges coming out of fair are much more constrained than CMIP6 models in Gillett et al., since the historical climate record and emergent climate metrics are constrained on observations and AR6 assessment (by the fair-calibrate ensemble).
 
 # %%
-pl.fill_between(np.arange(1750, 2025), temp_all.quantile(0.05, dim="config"), temp_all.quantile(0.95, dim="config"), color='orange', alpha=0.2, lw=1)
-pl.plot(np.arange(1750, 2025), temp_all.median(dim="config"), color='orange', label='All forcers');
+pl.fill_between(np.arange(1750, 2027), temp_all.quantile(0.05, dim="config"), temp_all.quantile(0.95, dim="config"), color='orange', alpha=0.2, lw=1)
+pl.plot(np.arange(1750, 2027), temp_all.median(dim="config"), color='orange', label='All forcers');
 
-pl.fill_between(np.arange(1750, 2025), temp_ghgs.quantile(0.05, dim="config"), temp_ghgs.quantile(0.95, dim="config"), color='0.5', alpha=0.2, lw=1)
-pl.plot(np.arange(1750, 2025), temp_ghgs.median(dim="config"), color='0.5', label='Greenhouse gases');
+pl.fill_between(np.arange(1750, 2027), temp_ghgs.quantile(0.05, dim="config"), temp_ghgs.quantile(0.95, dim="config"), color='0.5', alpha=0.2, lw=1)
+pl.plot(np.arange(1750, 2027), temp_ghgs.median(dim="config"), color='0.5', label='Greenhouse gases');
 
-pl.fill_between(np.arange(1750, 2025), temp_aerosols.quantile(0.05, dim="config"), temp_aerosols.quantile(0.95, dim="config"), color='blue', alpha=0.2, lw=1)
-pl.plot(np.arange(1750, 2025), temp_aerosols.median(dim="config"), color='blue', label='Aerosols');
+pl.fill_between(np.arange(1750, 2027), temp_aerosols.quantile(0.05, dim="config"), temp_aerosols.quantile(0.95, dim="config"), color='blue', alpha=0.2, lw=1)
+pl.plot(np.arange(1750, 2027), temp_aerosols.median(dim="config"), color='blue', label='Aerosols');
 
 #pl.plot(np.arange(1750, 2024), temp_other.median(dim="config"), color='green')
 
-pl.fill_between(np.arange(1750, 2025), temp_natural.quantile(0.05, dim="config"), temp_natural.quantile(0.95, dim="config"), color='green', alpha=0.2, lw=1)
-pl.plot(np.arange(1750, 2025), temp_natural.median(dim="config"), color='green', label='Natural');
+pl.fill_between(np.arange(1750, 2027), temp_natural.quantile(0.05, dim="config"), temp_natural.quantile(0.95, dim="config"), color='green', alpha=0.2, lw=1)
+pl.plot(np.arange(1750, 2027), temp_natural.median(dim="config"), color='green', label='Natural');
 pl.plot(df_obs.gmst, color='k', label='HadCRUT5')
 
 pl.ylabel('°C relative to 1850-1900')
 pl.legend();
 pl.grid()
 
-pl.xlim(1850, 2024)
+pl.xlim(1850, 2026)
 pl.ylim(-1.5, 2.5)
 
 os.makedirs('../plots/', exist_ok=True)
@@ -455,19 +451,19 @@ pl.tight_layout()
 pl.savefig('../plots/attributed_warming_rel1850-1900.png')
 
 # %%
-pl.fill_between(np.arange(1750, 2025), temp_anthro.quantile(0.05, dim="config"), temp_anthro.quantile(0.95, dim="config"), color='purple', alpha=0.2, lw=1)
-pl.plot(np.arange(1750, 2025), temp_anthro.median(dim="config"), color='purple', label='Anthropogenic');
+pl.fill_between(np.arange(1750, 2027), temp_anthro.quantile(0.05, dim="config"), temp_anthro.quantile(0.95, dim="config"), color='purple', alpha=0.2, lw=1)
+pl.plot(np.arange(1750, 2027), temp_anthro.median(dim="config"), color='purple', label='Anthropogenic');
 
-pl.fill_between(np.arange(1750, 2025), temp_natural.quantile(0.05, dim="config"), temp_natural.quantile(0.95, dim="config"), color='green', alpha=0.2, lw=1)
-pl.plot(np.arange(1750, 2025), temp_natural.median(dim="config"), color='green', label='Natural');
+pl.fill_between(np.arange(1750, 2027), temp_natural.quantile(0.05, dim="config"), temp_natural.quantile(0.95, dim="config"), color='green', alpha=0.2, lw=1)
+pl.plot(np.arange(1750, 2027), temp_natural.median(dim="config"), color='green', label='Natural');
 pl.plot(df_obs.gmst, color='k', label='HadCRUT5')
 
 pl.ylabel('°C relative to 1850-1900')
 pl.legend();
 pl.grid()
 
-pl.xlim(1850, 2024)
-pl.ylim(-0.5, 1.5)
+pl.xlim(1850, 2026)
+pl.ylim(-0.4, 1.6)
 
 os.makedirs('../plots/', exist_ok=True)
 pl.tight_layout()
@@ -500,7 +496,7 @@ df_out = pd.DataFrame(
             temp_all.quantile(0.95, dim="config").data,
         ]
     ).T,
-    index=np.arange(1750, 2025),
+    index=np.arange(1750, 2027),
     columns=['ghg_05', 'ghg_50', 'ghg_95', 'aerosol_05', 'aerosol_50', 'aerosol_95', 'other_05', 'other_50', 'other_95', 'natural_05', 'natural_50', 'natural_95', 'anthro_05', 'anthro_50', 'anthro_95', 'all_05', 'all_50', 'all_95']
 )
 

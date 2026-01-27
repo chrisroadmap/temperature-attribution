@@ -3,6 +3,7 @@
 
 # OS junk
 *.DS_Store
+*:Zone.Identifier
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
